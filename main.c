@@ -1,5 +1,6 @@
 #include "header.h"
 #include <opencv2/highgui/highgui_c.h>
+#include <string.h>
 
 // argv[1] = filename inside chars
 // argv[2] = segment size
@@ -30,14 +31,14 @@ int main(int argc, char ** argv)
     }
     
     
-    //逆変換した画像の領域確保
+    //逆変換した画像の領域確保 # Securing the space of the inversely transformed image
     invImage = cvCreateImage( cvGetSize(image), IPL_DEPTH_8U, 1);
     
-    //DCT,IDCT用の行列作成(double)
+    //DCT,IDCT用の行列作成(double) # Matrix creation
     dct = cvCreateMat(image->height, image->width, CV_64FC1);
     idct = cvCreateMat(image->height, image->width, CV_64FC1);
     
-    //行列dctに画像データをコピー
+    //行列dctに画像データをコピー # Copy image data to matrix dct
     for(y=0; y<image->height; y++){
         for(x=0; x<image->width; x++){
             cvmSet(dct,
@@ -47,14 +48,10 @@ int main(int argc, char ** argv)
         }
     }
     
-    //printCvMat(dct, 0, 2);
-    //DCT
-    cvDCT( dct, dct, CV_DXT_FORWARD);
-    //printCvMat(dct, 0, 2);
-    
     makeIdctImage(dct, idct, invImage, g_dct_level);
     //printCvMat(dct, 0, 2);
     
+
     locateTopAndBottom(invImage);
     
     
